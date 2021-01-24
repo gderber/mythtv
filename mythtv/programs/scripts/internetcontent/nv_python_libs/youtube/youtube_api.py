@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 # ----------------------
 # Name: youtube_api - Simple-to-use Python interface to the youtube API (http://www.youtube.com/)
@@ -37,7 +37,7 @@ __version__="v0.3.0"
 # 0.3.0 Adapted to the v3 API
 
 import os, struct, sys, re, time, shutil
-import urllib, urllib2
+import urllib, urllib3
 import json
 import logging
 from MythTV import MythXML
@@ -63,7 +63,7 @@ class JsonHandler:
         try:
             urlhandle = urllib.urlopen(self.url)
             return json.load(urlhandle)
-        except IOError, errormsg:
+        except IOError as errormsg:
             raise YouTubeHttpError(errormsg)
 
 
@@ -406,12 +406,12 @@ class Videos(object):
                 (urllib.quote_plus(title.encode("utf-8")), pagelen, self.apikey,
                         pagenumber)
         if self.config['debug_enabled']:
-            print url
-            print
+            print (url)
+            print ()
 
         try:
             return JsonHandler(url).getJson()
-        except Exception, errormsg:
+        except Exception as errormsg:
             raise YouTubeUrlError(self.error_messages['YouTubeUrlError'] % (url, errormsg))
 
     def getVideoDetails(self, ids):
@@ -483,19 +483,19 @@ class Videos(object):
 
         try:
             data = self.searchTitle(title, pagenumber, self.page_limit)
-        except YouTubeVideoNotFound, msg:
+        except YouTubeVideoNotFound as msg:
             sys.stderr.write(u"%s\n" % msg)
             return None
-        except YouTubeUrlError, msg:
+        except YouTubeUrlError as msg:
             sys.stderr.write(u'%s\n' % msg)
             sys.exit(1)
-        except YouTubeHttpError, msg:
+        except YouTubeHttpError as msg:
             sys.stderr.write(self.error_messages['YouTubeHttpError'] % msg)
             sys.exit(1)
-        except YouTubeRssError, msg:
+        except YouTubeRssError as msg:
             sys.stderr.write(self.error_messages['YouTubeRssError'] % msg)
             sys.exit(1)
-        except Exception, e:
+        except Exception as e:
             sys.stderr.write(u"! Error: Unknown error during a Video search (%s)\nError(%s)\n" % (title, e))
             sys.exit(1)
 
@@ -584,13 +584,13 @@ class Videos(object):
         initial_length = len(dictionaries)
 
         if self.config['debug_enabled']:
-            print "Category URL:"
-            print url
-            print
+            print ("Category URL:")
+            print (url)
+            print ()
 
         try:
             result = JsonHandler(url).getJson()
-        except Exception, errormsg:
+        except Exception as errormsg:
             sys.stderr.write(self.error_messages['YouTubeUrlError'] % (url, errormsg))
             return dictionaries
 

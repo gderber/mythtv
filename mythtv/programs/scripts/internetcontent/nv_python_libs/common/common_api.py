@@ -58,7 +58,7 @@ import logging
 import telnetlib
 from threading import Thread
 
-from common_exceptions import (WebCgiUrlError, WebCgiHttpError, WebCgiRssError, WebCgiVideoNotFound, WebCgiXmlError, )
+from .common_exceptions import (WebCgiUrlError, WebCgiHttpError, WebCgiRssError, WebCgiVideoNotFound, WebCgiXmlError, )
 
 class OutStreamEncoder(object):
     """Wraps a stream with an encoder"""
@@ -92,7 +92,7 @@ sys.stderr = OutStreamEncoder(sys.stderr, 'utf8')
 try:
     from StringIO import StringIO
     from lxml import etree
-except Exception, e:
+except Exception as e:
     sys.stderr.write(u'\n! Error - Importing the "lxml" python library failed on error(%s)\n' % e)
     sys.exit(1)
 
@@ -308,7 +308,7 @@ class Common(object):
         try:
             p = subprocess.Popen(command, shell=True, bufsize=4096, stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=True)
-        except Exception, e:
+        except Exception as e:
             if self.logger:
                 self.logger.error(u'callCommandLine Popen Exception, error(%s)' % e)
             if stderr:
@@ -417,7 +417,7 @@ class Common(object):
         url = u'%s/nv_python_libs/configs/HTML/%s' % (baseProcessingDir, variables[0])
         try:
             customHTML = etree.parse(url)
-        except Exception, e:
+        except Exception as e:
             raise Exception(u"! Error: The Custom HTML file (%s) cause the exception error (%s)\n" % (url, errormsg))
 
         # There may be one or more argumants to replace in the HTML code
@@ -480,9 +480,9 @@ class Common(object):
         urlDictionary = {}
 
         if self.debug:
-            print "inputUrls:"
+            print ("inputUrls:")
             sys.stdout.write(etree.tostring(inputUrls, encoding='UTF-8', pretty_print=True))
-            print
+            print ()
 
         for element in inputUrls.xpath('.//url'):
             key = element.find('name').text
@@ -512,9 +512,9 @@ class Common(object):
                 urlDictionary[key]['parameter'] = element.find('parameter').text
 
         if self.debug:
-            print "urlDictionary:"
-            print urlDictionary
-            print
+            print ("urlDictionary:")
+            print (urlDictionary)
+            print ()
 
         thread_list = []
         getURL.urlDictionary = urlDictionary
@@ -559,9 +559,9 @@ class Common(object):
                     result.append(element)
 
         if self.debug:
-            print "root:"
+            print ("root:")
             sys.stdout.write(etree.tostring(root, encoding='UTF-8', pretty_print=True))
-            print
+            print ()
 
         return root
     # end getShows()
@@ -634,7 +634,7 @@ for xpathClass in %(filename)s.__xpathClassList__:
         exec("self.functionDict['%%s'] = %%s" %% (func, u'xpathClass.%%s' %% func))
 for xsltExtension in %(filename)s.__xsltExtentionList__:
     exec("self.functionDict['%%s'] = %%s" %% (xsltExtension, u'%(filename)s.%%s' %% xsltExtension))''' % filename )
-            except Exception, errmsg:
+            except Exception as errmsg:
                 sys.stderr.write(u'! Error: Dynamic import of (%s) XPath and XSLT extention functions\nmessage(%s)\n' % (fileName, errmsg))
 
         return
@@ -676,7 +676,7 @@ for xsltExtension in %(filename)s.__xsltExtentionList__:
                     return time.strftime(self.pubDateFormat, pubdate)
             else:
                 return datetime.datetime.now().strftime(self.pubDateFormat)
-        except Exception, err:
+        except Exception as err:
             sys.stderr.write(u'! Error: pubDate variables(%s) error(%s)\n' % (args, err))
         return args[0]
     # end pubDate()
@@ -937,7 +937,7 @@ for xsltExtension in %(filename)s.__xsltExtentionList__:
                 '''
                 MythLog._setlevel('none') # Some non option -M cannot have any logging on stdout
                 self.mythdb = MythDB()
-            except MythError, e:
+            except MythError as e:
                 sys.stderr.write(u'\n! Error - %s\n' % e.args[0])
                 filename = os.path.expanduser("~")+'/.mythtv/config.xml'
                 if not os.path.isfile(filename):
@@ -945,10 +945,10 @@ for xsltExtension in %(filename)s.__xsltExtentionList__:
                 else:
                     sys.stderr.write(u'\n! Error - Check that (%s) is correctly configured\n' % filename)
                 sys.exit(1)
-            except Exception, e:
+            except Exception as e:
                 sys.stderr.write(u"\n! Error - Creating an instance caused an error for one of: MythDB. error(%s)\n" % e)
                 sys.exit(1)
-        except Exception, e:
+        except Exception as e:
             sys.stderr.write(u"\n! Error - MythTV python bindings could not be imported. error(%s)\n" % e)
             sys.exit(1)
     # end initializeMythDB()
@@ -970,27 +970,27 @@ class getURL(Thread):
 
     def run(self):
         if self.debug:
-            print u"getURL href(%s)" % (self.urlDictionary[self.urlKey]['href'], )
-            print
+            print ("getURL: ", href(self.urlDictionary[self.urlKey]['href']))
+            print ()
 
         # Input the data from a url
         try:
             self.urlDictionary[self.urlKey]['tree'] = etree.parse(self.urlDictionary[self.urlKey]['href'], self.urlDictionary[self.urlKey]['parser'])
-        except Exception, errormsg:
+        except Exception as errormsg:
             sys.stderr.write(u"! Error: The URL (%s) cause the exception error (%s)\n" % (self.urlDictionary[self.urlKey]['href'], errormsg))
             return
 
         if self.debug:
-            print "Raw unfiltered URL input:"
+            print ("Raw unfiltered URL input:")
             sys.stdout.write(etree.tostring(self.urlDictionary[self.urlKey]['tree'], encoding='UTF-8', pretty_print=True))
-            print
+            print ()
 
         if len(self.urlDictionary[self.urlKey]['filter']):
             for index in range(len(self.urlDictionary[self.urlKey]['filter'])):
                 # Filter out the desired data
                 try:
                    self.urlDictionary[self.urlKey]['tmp'] = self.urlDictionary[self.urlKey]['tree'].xpath(self.urlDictionary[self.urlKey]['filter'][index], namespaces=self.urlDictionary[self.urlKey]['namespaces'])
-                except AssertionError, e:
+                except AssertionError as e:
                     sys.stderr.write(u"No filter results for Name(%s)\n" % self.urlKey)
                     sys.stderr.write(u"No filter results for url(%s)\n" % self.urlDictionary[self.urlKey]['href'])
                     sys.stderr.write(u"! Error:(%s)\n" % e)
@@ -1008,7 +1008,7 @@ class getURL(Thread):
 self.urlDictionary[self.urlKey]['parameter']) )
                     else:
                         self.urlDictionary[self.urlKey]['tmp'] = self.urlDictionary[self.urlKey]['xslt'][index](self.urlDictionary[self.urlKey]['tree'])
-                except Exception, e:
+                except Exception as e:
                     sys.stderr.write(u"! XSLT Error:(%s) Key(%s)\n" % (e, self.urlKey))
                     if len(self.urlDictionary[self.urlKey]['filter']) == index-1:
                         return
