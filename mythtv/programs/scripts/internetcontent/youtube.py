@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 # ----------------------
 # Name: youtube.py
@@ -174,7 +174,7 @@ import sys, os
 # Verify that the tmdb_api modules are installed and accessible
 try:
     import nv_python_libs.youtube.youtube_api as target
-except Exception, e:
+except Exception as e:
     sys.stderr.write('''
 The subdirectory "nv_python_libs/youtube" containing the modules youtube_api.py (v0.2.0 or greater),
 They should have been included with the distribution of youtube.py.
@@ -190,7 +190,7 @@ if target.__version__ < '0.2.0':
 # Verify that the common process modules are installed and accessible
 try:
     import nv_python_libs.mainProcess as process
-except Exception, e:
+except Exception as e:
     sys.stderr.write('''
 The python script "nv_python_libs/mainProcess.py" must be present.
 Error(%s)
