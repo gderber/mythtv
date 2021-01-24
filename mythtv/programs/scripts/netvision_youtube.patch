@@ -1,0 +1,287 @@
+[33mdiff --git a/mythtv/programs/scripts/internetcontent/nv_python_libs/common/__pycache__/__init__.cpython-39.pyc b/mythtv/programs/scripts/internetcontent/nv_python_libs/common/__pycache__/__init__.cpython-39.pyc[m
+[33mnew file mode 100644[m
+[33mindex 0000000000..0574293162[m
+Binary files /dev/null and b/mythtv/programs/scripts/internetcontent/nv_python_libs/common/__pycache__/__init__.cpython-39.pyc differ
+[33mdiff --git a/mythtv/programs/scripts/internetcontent/nv_python_libs/common/__pycache__/common_api.cpython-39.pyc b/mythtv/programs/scripts/internetcontent/nv_python_libs/common/__pycache__/common_api.cpython-39.pyc[m
+[33mnew file mode 100644[m
+[33mindex 0000000000..a0e6899faf[m
+Binary files /dev/null and b/mythtv/programs/scripts/internetcontent/nv_python_libs/common/__pycache__/common_api.cpython-39.pyc differ
+[33mdiff --git a/mythtv/programs/scripts/internetcontent/nv_python_libs/common/__pycache__/common_exceptions.cpython-39.pyc b/mythtv/programs/scripts/internetcontent/nv_python_libs/common/__pycache__/common_exceptions.cpython-39.pyc[m
+[33mnew file mode 100644[m
+[33mindex 0000000000..99ef14d457[m
+Binary files /dev/null and b/mythtv/programs/scripts/internetcontent/nv_python_libs/common/__pycache__/common_exceptions.cpython-39.pyc differ
+[33mdiff --git a/mythtv/programs/scripts/internetcontent/nv_python_libs/common/common_api.py b/mythtv/programs/scripts/internetcontent/nv_python_libs/common/common_api.py[m
+[33mindex 2f58267c30..c18d10f47d 100644[m
+[33m--- a/mythtv/programs/scripts/internetcontent/nv_python_libs/common/common_api.py[m
+[33m+++ b/mythtv/programs/scripts/internetcontent/nv_python_libs/common/common_api.py[m
+[35m@@ -58,7 +58,7 @@[m [mimport logging[m
+ import telnetlib[m
+ from threading import Thread[m
+ [m
+[31m-from common_exceptions import (WebCgiUrlError, WebCgiHttpError, WebCgiRssError, WebCgiVideoNotFound, WebCgiXmlError, )[m
+[32m+[m[32mfrom .common_exceptions import (WebCgiUrlError, WebCgiHttpError, WebCgiRssError, WebCgiVideoNotFound, WebCgiXmlError, )[m
+ [m
+ class OutStreamEncoder(object):[m
+     """Wraps a stream with an encoder"""[m
+[35m@@ -92,7 +92,7 @@[m [msys.stderr = OutStreamEncoder(sys.stderr, 'utf8')[m
+ try:[m
+     from StringIO import StringIO[m
+     from lxml import etree[m
+[31m-except Exception, e:[m
+[32m+[m[32mexcept Exception as e:[m
+     sys.stderr.write(u'\n! Error - Importing the "lxml" python library failed on error(%s)\n' % e)[m
+     sys.exit(1)[m
+ [m
+[35m@@ -308,7 +308,7 @@[m [mclass Common(object):[m
+         try:[m
+             p = subprocess.Popen(command, shell=True, bufsize=4096, stdin=subprocess.PIPE,[m
+                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=True)[m
+[31m-        except Exception, e:[m
+[32m+[m[32m        except Exception as e:[m
+             if self.logger:[m
+                 self.logger.error(u'callCommandLine Popen Exception, error(%s)' % e)[m
+             if stderr:[m
+[35m@@ -417,7 +417,7 @@[m [mclass Common(object):[m
+         url = u'%s/nv_python_libs/configs/HTML/%s' % (baseProcessingDir, variables[0])[m
+         try:[m
+             customHTML = etree.parse(url)[m
+[31m-        except Exception, e:[m
+[32m+[m[32m        except Exception as e:[m
+             raise Exception(u"! Error: The Custom HTML file (%s) cause the exception error (%s)\n" % (url, errormsg))[m
+ [m
+         # There may be one or more argumants to replace in the HTML code[m
+[35m@@ -480,9 +480,9 @@[m [mclass Common(object):[m
+         urlDictionary = {}[m
+ [m
+         if self.debug:[m
+[31m-            print "inputUrls:"[m
+[32m+[m[32m            print ("inputUrls:")[m
+             sys.stdout.write(etree.tostring(inputUrls, encoding='UTF-8', pretty_print=True))[m
+[31m-            print[m
+[32m+[m[32m            print ()[m
+ [m
+         for element in inputUrls.xpath('.//url'):[m
+             key = element.find('name').text[m
+[35m@@ -512,9 +512,9 @@[m [mclass Common(object):[m
+                 urlDictionary[key]['parameter'] = element.find('parameter').text[m
+ [m
+         if self.debug:[m
+[31m-            print "urlDictionary:"[m
+[31m-            print urlDictionary[m
+[31m-            print[m
+[32m+[m[32m            print ("urlDictionary:")[m
+[32m+[m[32m            print (urlDictionary)[m
+[32m+[m[32m            print ()[m
+ [m
+         thread_list = [][m
+         getURL.urlDictionary = urlDictionary[m
+[35m@@ -559,9 +559,9 @@[m [mclass Common(object):[m
+                     result.append(element)[m
+ [m
+         if self.debug:[m
+[31m-            print "root:"[m
+[32m+[m[32m            print ("root:")[m
+             sys.stdout.write(etree.tostring(root, encoding='UTF-8', pretty_print=True))[m
+[31m-            print[m
+[32m+[m[32m            print ()[m
+ [m
+         return root[m
+     # end getShows()[m
+[35m@@ -634,7 +634,7 @@[m [mfor xpathClass in %(filename)s.__xpathClassList__:[m
+         exec("self.functionDict['%%s'] = %%s" %% (func, u'xpathClass.%%s' %% func))[m
+ for xsltExtension in %(filename)s.__xsltExtentionList__:[m
+     exec("self.functionDict['%%s'] = %%s" %% (xsltExtension, u'%(filename)s.%%s' %% xsltExtension))''' % filename )[m
+[31m-            except Exception, errmsg:[m
+[32m+[m[32m            except Exception as errmsg:[m
+                 sys.stderr.write(u'! Error: Dynamic import of (%s) XPath and XSLT extention functions\nmessage(%s)\n' % (fileName, errmsg))[m
+ [m
+         return[m
+[35m@@ -676,7 +676,7 @@[m [mfor xsltExtension in %(filename)s.__xsltExtentionList__:[m
+                     return time.strftime(self.pubDateFormat, pubdate)[m
+             else:[m
+                 return datetime.datetime.now().strftime(self.pubDateFormat)[m
+[31m-        except Exception, err:[m
+[32m+[m[32m        except Exception as err:[m
+             sys.stderr.write(u'! Error: pubDate variables(%s) error(%s)\n' % (args, err))[m
+         return args[0][m
+     # end pubDate()[m
+[35m@@ -937,7 +937,7 @@[m [mfor xsltExtension in %(filename)s.__xsltExtentionList__:[m
+                 '''[m
+                 MythLog._setlevel('none') # Some non option -M cannot have any logging on stdout[m
+                 self.mythdb = MythDB()[m
+[31m-            except MythError, e:[m
+[32m+[m[32m            except MythError as e:[m
+                 sys.stderr.write(u'\n! Error - %s\n' % e.args[0])[m
+                 filename = os.path.expanduser("~")+'/.mythtv/config.xml'[m
+                 if not os.path.isfile(filename):[m
+[35m@@ -945,10 +945,10 @@[m [mfor xsltExtension in %(filename)s.__xsltExtentionList__:[m
+                 else:[m
+                     sys.stderr.write(u'\n! Error - Check that (%s) is correctly configured\n' % filename)[m
+                 sys.exit(1)[m
+[31m-            except Exception, e:[m
+[32m+[m[32m            except Exception as e:[m
+                 sys.stderr.write(u"\n! Error - Creating an instance caused an error for one of: MythDB. error(%s)\n" % e)[m
+                 sys.exit(1)[m
+[31m-        except Exception, e:[m
+[32m+[m[32m        except Exception as e:[m
+             sys.stderr.write(u"\n! Error - MythTV python bindings could not be imported. error(%s)\n" % e)[m
+             sys.exit(1)[m
+     # end initializeMythDB()[m
+[35m@@ -970,27 +970,27 @@[m [mclass getURL(Thread):[m
+ [m
+     def run(self):[m
+         if self.debug:[m
+[31m-            print u"getURL href(%s)" % (self.urlDictionary[self.urlKey]['href'], )[m
+[31m-            print[m
+[32m+[m[32m            print ("getURL: ", href(self.urlDictionary[self.urlKey]['href']))[m
+[32m+[m[32m            print ()[m
+ [m
+         # Input the data from a url[m
+         try:[m
+             self.urlDictionary[self.urlKey]['tree'] = etree.parse(self.urlDictionary[self.urlKey]['href'], self.urlDictionary[self.urlKey]['parser'])[m
+[31m-        except Exception, errormsg:[m
+[32m+[m[32m        except Exception as errormsg:[m
+             sys.stderr.write(u"! Error: The URL (%s) cause the exception error (%s)\n" % (self.urlDictionary[self.urlKey]['href'], errormsg))[m
+             return[m
+ [m
+         if self.debug:[m
+[31m-            print "Raw unfiltered URL input:"[m
+[32m+[m[32m            print ("Raw unfiltered URL input:")[m
+             sys.stdout.write(etree.tostring(self.urlDictionary[self.urlKey]['tree'], encoding='UTF-8', pretty_print=True))[m
+[31m-            print[m
+[32m+[m[32m            print ()[m
+ [m
+         if len(self.urlDictionary[self.urlKey]['filter']):[m
+             for index in range(len(self.urlDictionary[self.urlKey]['filter'])):[m
+                 # Filter out the desired data[m
+                 try:[m
+                    self.urlDictionary[self.urlKey]['tmp'] = self.urlDictionary[self.urlKey]['tree'].xpath(self.urlDictionary[self.urlKey]['filter'][index], namespaces=self.urlDictionary[self.urlKey]['namespaces'])[m
+[31m-                except AssertionError, e:[m
+[32m+[m[32m                except AssertionError as e:[m
+                     sys.stderr.write(u"No filter results for Name(%s)\n" % self.urlKey)[m
+                     sys.stderr.write(u"No filter results for url(%s)\n" % self.urlDictionary[self.urlKey]['href'])[m
+                     sys.stderr.write(u"! Error:(%s)\n" % e)[m
+[35m@@ -1008,7 +1008,7 @@[m [mclass getURL(Thread):[m
+ self.urlDictionary[self.urlKey]['parameter']) )[m
+                     else:[m
+                         self.urlDictionary[self.urlKey]['tmp'] = self.urlDictionary[self.urlKey]['xslt'][index](self.urlDictionary[self.urlKey]['tree'])[m
+[31m-                except Exception, e:[m
+[32m+[m[32m                except Exception as e:[m
+                     sys.stderr.write(u"! XSLT Error:(%s) Key(%s)\n" % (e, self.urlKey))[m
+                     if len(self.urlDictionary[self.urlKey]['filter']) == index-1:[m
+                         return[m
+[33mdiff --git a/mythtv/programs/scripts/internetcontent/nv_python_libs/youtube/youtube_api.py b/mythtv/programs/scripts/internetcontent/nv_python_libs/youtube/youtube_api.py[m
+[33mindex ff502cc9f9..7ad9877162 100644[m
+[33m--- a/mythtv/programs/scripts/internetcontent/nv_python_libs/youtube/youtube_api.py[m
+[33m+++ b/mythtv/programs/scripts/internetcontent/nv_python_libs/youtube/youtube_api.py[m
+[35m@@ -1,4 +1,4 @@[m
+[31m-#!/usr/bin/env python[m
+[32m+[m[32m#!/usr/bin/env python3[m
+ # -*- coding: UTF-8 -*-[m
+ # ----------------------[m
+ # Name: youtube_api - Simple-to-use Python interface to the youtube API (http://www.youtube.com/)[m
+[35m@@ -37,7 +37,7 @@[m [m__version__="v0.3.0"[m
+ # 0.3.0 Adapted to the v3 API[m
+ [m
+ import os, struct, sys, re, time, shutil[m
+[31m-import urllib, urllib2[m
+[32m+[m[32mimport urllib, urllib3[m
+ import json[m
+ import logging[m
+ from MythTV import MythXML[m
+[35m@@ -63,7 +63,7 @@[m [mclass JsonHandler:[m
+         try:[m
+             urlhandle = urllib.urlopen(self.url)[m
+             return json.load(urlhandle)[m
+[31m-        except IOError, errormsg:[m
+[32m+[m[32m        except IOError as errormsg:[m
+             raise YouTubeHttpError(errormsg)[m
+ [m
+ [m
+[35m@@ -406,12 +406,12 @@[m [mclass Videos(object):[m
+                 (urllib.quote_plus(title.encode("utf-8")), pagelen, self.apikey,[m
+                         pagenumber)[m
+         if self.config['debug_enabled']:[m
+[31m-            print url[m
+[31m-            print[m
+[32m+[m[32m            print (url)[m
+[32m+[m[32m            print ()[m
+ [m
+         try:[m
+             return JsonHandler(url).getJson()[m
+[31m-        except Exception, errormsg:[m
+[32m+[m[32m        except Exception as errormsg:[m
+             raise YouTubeUrlError(self.error_messages['YouTubeUrlError'] % (url, errormsg))[m
+ [m
+     def getVideoDetails(self, ids):[m
+[35m@@ -483,19 +483,19 @@[m [mclass Videos(object):[m
+ [m
+         try:[m
+             data = self.searchTitle(title, pagenumber, self.page_limit)[m
+[31m-        except YouTubeVideoNotFound, msg:[m
+[32m+[m[32m        except YouTubeVideoNotFound as msg:[m
+             sys.stderr.write(u"%s\n" % msg)[m
+             return None[m
+[31m-        except YouTubeUrlError, msg:[m
+[32m+[m[32m        except YouTubeUrlError as msg:[m
+             sys.stderr.write(u'%s\n' % msg)[m
+             sys.exit(1)[m
+[31m-        except YouTubeHttpError, msg:[m
+[32m+[m[32m        except YouTubeHttpError as msg:[m
+             sys.stderr.write(self.error_messages['YouTubeHttpError'] % msg)[m
+             sys.exit(1)[m
+[31m-        except YouTubeRssError, msg:[m
+[32m+[m[32m        except YouTubeRssError as msg:[m
+             sys.stderr.write(self.error_messages['YouTubeRssError'] % msg)[m
+             sys.exit(1)[m
+[31m-        except Exception, e:[m
+[32m+[m[32m        except Exception as e:[m
+             sys.stderr.write(u"! Error: Unknown error during a Video search (%s)\nError(%s)\n" % (title, e))[m
+             sys.exit(1)[m
+ [m
+[35m@@ -584,13 +584,13 @@[m [mclass Videos(object):[m
+         initial_length = len(dictionaries)[m
+ [m
+         if self.config['debug_enabled']:[m
+[31m-            print "Category URL:"[m
+[31m-            print url[m
+[31m-            print[m
+[32m+[m[32m            print ("Category URL:")[m
+[32m+[m[32m            print (url)[m
+[32m+[m[32m            print ()[m
+ [m
+         try:[m
+             result = JsonHandler(url).getJson()[m
+[31m-        except Exception, errormsg:[m
+[32m+[m[32m        except Exception as errormsg:[m
+             sys.stderr.write(self.error_messages['YouTubeUrlError'] % (url, errormsg))[m
+             return dictionaries[m
+ [m
+[33mdiff --git a/mythtv/programs/scripts/internetcontent/youtube.py b/mythtv/programs/scripts/internetcontent/youtube.py[m
+[33mindex f4bc7982be..551c8d5989 100755[m
+[33m--- a/mythtv/programs/scripts/internetcontent/youtube.py[m
+[33m+++ b/mythtv/programs/scripts/internetcontent/youtube.py[m
+[35m@@ -1,4 +1,4 @@[m
+[31m-#!/usr/bin/env python[m
+[32m+[m[32m#!/usr/bin/env python3[m
+ # -*- coding: UTF-8 -*-[m
+ # ----------------------[m
+ # Name: youtube.py[m
+[35m@@ -174,7 +174,7 @@[m [mimport sys, os[m
+ # Verify that the tmdb_api modules are installed and accessible[m
+ try:[m
+     import nv_python_libs.youtube.youtube_api as target[m
+[31m-except Exception, e:[m
+[32m+[m[32mexcept Exception as e:[m
+     sys.stderr.write('''[m
+ The subdirectory "nv_python_libs/youtube" containing the modules youtube_api.py (v0.2.0 or greater),[m
+ They should have been included with the distribution of youtube.py.[m
+[35m@@ -190,7 +190,7 @@[m [mif target.__version__ < '0.2.0':[m
+ # Verify that the common process modules are installed and accessible[m
+ try:[m
+     import nv_python_libs.mainProcess as process[m
+[31m-except Exception, e:[m
+[32m+[m[32mexcept Exception as e:[m
+     sys.stderr.write('''[m
+ The python script "nv_python_libs/mainProcess.py" must be present.[m
+ Error(%s)[m
